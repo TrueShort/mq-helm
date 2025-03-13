@@ -543,7 +543,13 @@ spec:
       #
       # Setting storageClassName to nil means use the default storage class
       storageClassName: {{ default nil .Values.persistence.dataPVC.storageClassName | quote }}
-      accessModes: [ "ReadWriteOnce" ]
+      # ReadWriteOnce unless multiinstance is enabled
+      accessModes: 
+      {{- if .Values.queueManager.multiinstance.enable }}
+      - ReadWriteMany
+      {{- else }}
+      - ReadWriteOnce
+      {{- end }}
       resources:
         requests:
           storage: {{ .Values.persistence.dataPVC.size | quote }}
@@ -559,7 +565,13 @@ spec:
       #
       # Setting storageClassName to nil means use the default storage class
       storageClassName: {{ default nil .Values.persistence.logPVC.storageClassName | quote }}
-      accessModes: [ "ReadWriteOnce" ]
+      # ReadWriteOnce unless multiinstance is enabled
+      accessModes: 
+      {{- if .Values.queueManager.multiinstance.enable }}
+      - ReadWriteMany
+      {{- else }}
+      - ReadWriteOnce
+      {{- end }}
       resources:
         requests:
           storage: {{ .Values.persistence.logPVC.size | quote }}
@@ -575,7 +587,13 @@ spec:
       #
       # Setting storageClassName to nil means use the default storage class
       storageClassName: {{ default nil .Values.persistence.qmPVC.storageClassName | quote }}
-      accessModes: [ "ReadWriteOnce" ]
+      # ReadWriteOnce unless multiinstance is enabled
+      accessModes: 
+      {{- if .Values.queueManager.multiinstance.enable }}
+      - ReadWriteMany
+      {{- else }}
+      - ReadWriteOnce
+      {{- end }}
       resources:
         requests:
           storage: {{ .Values.persistence.qmPVC.size | quote }}
